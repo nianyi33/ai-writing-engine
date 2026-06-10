@@ -90,5 +90,14 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-antd': ['antd', '@ant-design/icons', '@rc-component'],
+          'vendor-codemirror': ['@codemirror/state', '@codemirror/view', '@codemirror/lang-markdown', '@codemirror/language', '@uiw/react-codemirror'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1500,
   },
 });

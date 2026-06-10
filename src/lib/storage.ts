@@ -10,7 +10,7 @@ async function getDB(): Promise<IDBPDatabase> {
   if (dbInstance) return dbInstance;
 
   dbInstance = await openDB(DB_NAME, DB_VERSION, {
-    upgrade(db, oldVersion) {
+    upgrade(db, oldVersion, _newVersion, transaction) {
       // ── v1: initial stores ──
       if (oldVersion < 1) {
         if (!db.objectStoreNames.contains('works')) {
@@ -50,33 +50,18 @@ async function getDB(): Promise<IDBPDatabase> {
 
       // ── v2: storyBranches + new indices ──
       if (oldVersion < 2) {
-        // New store: storyBranches (migrated from localStorage)
         if (!db.objectStoreNames.contains('storyBranches')) {
           const branchStore = db.createObjectStore('storyBranches', { keyPath: 'id' });
           branchStore.createIndex('workId', 'workId');
         }
-        // New indices for performance
-        const tx = db.transaction as any;
-        // outline: parentId index for child lookup
-        if (db.objectStoreNames.contains('outline')) {
-          const outlineStore = tx.objectStore('outline');
-          if (!outlineStore.indexNames.contains('parentId')) {
-            outlineStore.createIndex('parentId', 'parentId');
-          }
-        }
-        // worldSettings: category index
-        if (db.objectStoreNames.contains('worldSettings')) {
-          const wsStore = tx.objectStore('worldSettings');
-          if (!wsStore.indexNames.contains('category')) {
-            wsStore.createIndex('category', 'category');
-          }
-        }
-        // chapters: updatedAt index for sort
-        if (db.objectStoreNames.contains('chapters')) {
-          const chStore = tx.objectStore('chapters');
-          if (!chStore.indexNames.contains('updatedAt')) {
-            chStore.createIndex('updatedAt', 'updatedAt');
-          }
+        // Add indices to existing stores using the upgrade transaction
+        if (db.objectStoreNames.contains('chapters') && oldVersion >= 1) {
+          try {
+            const chStore = transaction.objectStore('chapters');
+            if (!chStore.indexNames.contains('updatedAt')) {
+              chStore.createIndex('updatedAt', 'updatedAt');
+            }
+          } catch { /* ignore — store may not be accessible in this upgrade path */ }
         }
       }
     },
@@ -211,7 +196,6 @@ export async function saveOutlineNode(node: OutlineNode): Promise<void> {
 
 export async function deleteOutlineNode(id: string): Promise<void> {
   const db = await getDB();
-  // Use parentId index for efficient child lookup
   const children = await db.getAllFromIndex('outline', 'parentId', id);
   for (const child of children) await db.delete('outline', child.id);
   await db.delete('outline', id);

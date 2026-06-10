@@ -1,5 +1,6 @@
 use std::process::{Child, Command, Stdio};
 use std::sync::Mutex;
+use tauri::Manager;
 
 struct Backend {
     child: Mutex<Option<Child>>,
@@ -17,9 +18,9 @@ pub fn run() {
                 .and_then(|p| p.parent().map(|d| d.to_path_buf()))
                 .unwrap_or_default();
 
-            // In dev mode (cargo build): target/release or target/debug
-            // In production: exe_dir is the install dir with bundled resources
-            let project_root = std::env::current_dir().unwrap_or(exe_dir.clone());
+            // Project root = 3 levels up from target/release/
+            let project_root = exe_dir.join("..").join("..").join("..");
+            let project_root = project_root.canonicalize().unwrap_or(project_root);
 
             // Start backend: try node + bundled script, then npx tsx
             let script = exe_dir.join("resources").join("backend-bundle.cjs");
