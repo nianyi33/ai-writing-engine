@@ -96,12 +96,7 @@ function getApiConfig() {
 }
 
 function apiUrl(path: string): string {
-  const isTauri = typeof window !== 'undefined' && (
-    '__TAURI_INTERNALS__' in window ||
-    '__TAURI__' in window ||
-    window.location.protocol === 'tauri:' ||
-    (window.location.protocol === 'https:' && window.location.hostname === 'tauri.localhost')
-  );
+  const isTauri = typeof window !== 'undefined' && '__TAURI__' in window;
   return isTauri ? `http://localhost:3001${path}` : path;
 }
 

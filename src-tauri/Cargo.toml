@@ -1,0 +1,20 @@
+[package]
+name = "ai-writing-engine"
+version = "1.0.0"
+description = "AI写作引擎 — 网络小说创作伴侣"
+edition = "2021"
+rust-version = "1.77"
+
+[lib]
+name = "ai_writing_engine_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-fs = "2"
+tauri-plugin-shell = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

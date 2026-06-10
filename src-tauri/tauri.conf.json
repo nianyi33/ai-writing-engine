@@ -1,0 +1,29 @@
+{
+  "productName": "AI写作引擎",
+  "version": "1.0.0",
+  "identifier": "com.ai-writing-engine.desktop",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "AI写作引擎",
+        "width": 1280,
+        "height": 800,
+        "minWidth": 900,
+        "minHeight": 600,
+        "center": true,
+        "resizable": true
+      }
+    ],
+    "security": { "csp": null },
+    "withGlobalTauri": true
+  },
+  "bundle": {
+    "active": false,
+    "icon": ["icons/icon.png"]
+  }
+}

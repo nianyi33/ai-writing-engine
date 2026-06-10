@@ -1,9 +1,9 @@
 import type { UserSettings } from './types';
-import { PROVIDERS, MODELS } from '../../shared/models';
+import { PROVIDERS_WITH_MODELS, MODELS } from '../../shared/models';
 import type { SharedModel, SharedProvider } from '../../shared/models';
 
 export type { SharedModel as ModelInfo, SharedProvider as ProviderInfo };
-export { PROVIDERS };
+export const PROVIDERS = PROVIDERS_WITH_MODELS;
 
 // ── Flat model list ──
 export const AVAILABLE_MODELS = MODELS;

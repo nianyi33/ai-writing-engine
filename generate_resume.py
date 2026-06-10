@@ -308,6 +308,17 @@ proj2_items = [
 for item in proj2_items:
     add_bullet(doc, item)
 
+# ── Demo 链接 ──
+demo_p = doc.add_paragraph()
+demo_p.paragraph_format.space_before = Pt(10)
+demo_p.paragraph_format.space_after = Pt(2)
+run = demo_p.add_run("🔗 在线 Demo：")
+run.bold = True
+run.font.size = Pt(10)
+run = demo_p.add_run(" ai-writing-engine-production.up.railway.app")
+run.font.size = Pt(9.5)
+run.font.color.rgb = RGBColor(0x2B, 0x57, 0x9A)
+
 # ══════════════════════════════════════════════════════════
 # 五、教育背景
 # ══════════════════════════════════════════════════════════
