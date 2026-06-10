@@ -32,6 +32,7 @@ export const PROVIDERS_WITH_MODELS = PROVIDERS.map(p => ({
 
 export const MODELS: SharedModel[] = [
   { id: 'deepseek-chat', name: 'DeepSeek V3', provider: 'deepseek', category: 'fast' },
+  { id: 'deepseek-v4-pro', name: 'DeepSeek V4 Pro', provider: 'deepseek', category: 'powerful' },
   { id: 'deepseek-reasoner', name: 'DeepSeek R1', provider: 'deepseek', category: 'reasoning' },
   { id: 'qwen-turbo', name: 'Qwen Turbo', provider: 'qwen', category: 'fast' },
   { id: 'qwen-plus', name: 'Qwen Plus', provider: 'qwen', category: 'balanced' },
