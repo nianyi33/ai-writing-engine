@@ -2,70 +2,142 @@ import { openDB, IDBPDatabase } from 'idb';
 import type { Work, Chapter, ChapterVersion, OutlineNode, Character, WorldSetting, BondRecord, UserSettings, StoryBranch } from './types';
 
 const DB_NAME = 'ai-writing-engine';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 let dbInstance: IDBPDatabase | null = null;
 
 async function getDB(): Promise<IDBPDatabase> {
   if (dbInstance) return dbInstance;
 
-  dbInstance = await openDB(DB_NAME, DB_VERSION, {
-    upgrade(db, oldVersion, _newVersion, transaction) {
-      // ── v1: initial stores ──
-      if (oldVersion < 1) {
-        if (!db.objectStoreNames.contains('works')) {
-          const worksStore = db.createObjectStore('works', { keyPath: 'id' });
-          worksStore.createIndex('updatedAt', 'updatedAt');
+  try {
+    dbInstance = await openDB(DB_NAME, DB_VERSION, {
+      upgrade(db, oldVersion, _newVersion, transaction) {
+        // ── v1: initial stores ──
+        if (oldVersion < 1) {
+          if (!db.objectStoreNames.contains('works')) {
+            const worksStore = db.createObjectStore('works', { keyPath: 'id' });
+            worksStore.createIndex('updatedAt', 'updatedAt');
+          }
+          if (!db.objectStoreNames.contains('chapters')) {
+            const chaptersStore = db.createObjectStore('chapters', { keyPath: 'id' });
+            chaptersStore.createIndex('workId', 'workId');
+            chaptersStore.createIndex('workId_order', ['workId', 'order']);
+          }
+          if (!db.objectStoreNames.contains('versions')) {
+            const versionsStore = db.createObjectStore('versions', { keyPath: 'id' });
+            versionsStore.createIndex('chapterId', 'chapterId');
+            versionsStore.createIndex('chapterId_sequence', ['chapterId', 'sequence']);
+          }
+          if (!db.objectStoreNames.contains('outline')) {
+            const outlineStore = db.createObjectStore('outline', { keyPath: 'id' });
+            outlineStore.createIndex('workId', 'workId');
+          }
+          if (!db.objectStoreNames.contains('characters')) {
+            const charsStore = db.createObjectStore('characters', { keyPath: 'id' });
+            charsStore.createIndex('workId', 'workId');
+          }
+          if (!db.objectStoreNames.contains('worldSettings')) {
+            const wsStore = db.createObjectStore('worldSettings', { keyPath: 'id' });
+            wsStore.createIndex('workId', 'workId');
+          }
+          if (!db.objectStoreNames.contains('bonds')) {
+            const bondsStore = db.createObjectStore('bonds', { keyPath: 'id' });
+            bondsStore.createIndex('characterId', 'characterId');
+          }
+          if (!db.objectStoreNames.contains('settings')) {
+            db.createObjectStore('settings');
+          }
         }
-        if (!db.objectStoreNames.contains('chapters')) {
-          const chaptersStore = db.createObjectStore('chapters', { keyPath: 'id' });
-          chaptersStore.createIndex('workId', 'workId');
-          chaptersStore.createIndex('workId_order', ['workId', 'order']);
-        }
-        if (!db.objectStoreNames.contains('versions')) {
-          const versionsStore = db.createObjectStore('versions', { keyPath: 'id' });
-          versionsStore.createIndex('chapterId', 'chapterId');
-          versionsStore.createIndex('chapterId_sequence', ['chapterId', 'sequence']);
-        }
-        if (!db.objectStoreNames.contains('outline')) {
-          const outlineStore = db.createObjectStore('outline', { keyPath: 'id' });
-          outlineStore.createIndex('workId', 'workId');
-        }
-        if (!db.objectStoreNames.contains('characters')) {
-          const charsStore = db.createObjectStore('characters', { keyPath: 'id' });
-          charsStore.createIndex('workId', 'workId');
-        }
-        if (!db.objectStoreNames.contains('worldSettings')) {
-          const wsStore = db.createObjectStore('worldSettings', { keyPath: 'id' });
-          wsStore.createIndex('workId', 'workId');
-        }
-        if (!db.objectStoreNames.contains('bonds')) {
-          const bondsStore = db.createObjectStore('bonds', { keyPath: 'id' });
-          bondsStore.createIndex('characterId', 'characterId');
-        }
-        if (!db.objectStoreNames.contains('settings')) {
-          db.createObjectStore('settings');
-        }
-      }
 
-      // ── v2: storyBranches + new indices ──
-      if (oldVersion < 2) {
-        if (!db.objectStoreNames.contains('storyBranches')) {
-          const branchStore = db.createObjectStore('storyBranches', { keyPath: 'id' });
-          branchStore.createIndex('workId', 'workId');
+        // ── v2: storyBranches ──
+        if (oldVersion < 2) {
+          if (!db.objectStoreNames.contains('storyBranches')) {
+            const branchStore = db.createObjectStore('storyBranches', { keyPath: 'id' });
+            branchStore.createIndex('workId', 'workId');
+          }
         }
-        // Add indices to existing stores using the upgrade transaction
-        if (db.objectStoreNames.contains('chapters') && oldVersion >= 1) {
-          try {
-            const chStore = transaction.objectStore('chapters');
-            if (!chStore.indexNames.contains('updatedAt')) {
-              chStore.createIndex('updatedAt', 'updatedAt');
-            }
-          } catch { /* ignore — store may not be accessible in this upgrade path */ }
+
+        // ── v3: add updatedAt/chapterId indices (safe, no transaction needed) ──
+        if (oldVersion < 3) {
+          if (db.objectStoreNames.contains('chapters')) {
+            try {
+              const chStore = transaction.objectStore('chapters');
+              if (chStore && !chStore.indexNames.contains('updatedAt')) {
+                chStore.createIndex('updatedAt', 'updatedAt');
+              }
+            } catch { /* ignore */ }
+          }
         }
-      }
-    },
-  });
+      },
+      blocked() {
+        // Another tab has the old version open — alert user
+        console.warn('IndexedDB blocked: close other tabs and refresh');
+      },
+      blocking() {
+        // This tab is blocking an upgrade in another tab
+        if (dbInstance) {
+          dbInstance.close();
+          dbInstance = null;
+        }
+      },
+      terminated() {
+        // Browser deleted the database (e.g. private mode exit)
+        dbInstance = null;
+      },
+    });
+  } catch (err) {
+    // If DB is corrupted from a previous failed upgrade, delete and recreate
+    console.warn('IndexedDB upgrade failed, deleting and recreating:', err);
+    await new Promise<void>((resolve) => {
+      const req = indexedDB.deleteDatabase(DB_NAME);
+      req.onsuccess = () => resolve();
+      req.onerror = () => resolve(); // continue even if delete fails
+    });
+    // Retry with fresh DB
+    dbInstance = await openDB(DB_NAME, DB_VERSION, {
+      upgrade(db, oldVersion, _newVersion, transaction) {
+        if (oldVersion < 1) {
+          if (!db.objectStoreNames.contains('works')) {
+            const worksStore = db.createObjectStore('works', { keyPath: 'id' });
+            worksStore.createIndex('updatedAt', 'updatedAt');
+          }
+          if (!db.objectStoreNames.contains('chapters')) {
+            const chaptersStore = db.createObjectStore('chapters', { keyPath: 'id' });
+            chaptersStore.createIndex('workId', 'workId');
+            chaptersStore.createIndex('workId_order', ['workId', 'order']);
+          }
+          if (!db.objectStoreNames.contains('versions')) {
+            const versionsStore = db.createObjectStore('versions', { keyPath: 'id' });
+            versionsStore.createIndex('chapterId', 'chapterId');
+            versionsStore.createIndex('chapterId_sequence', ['chapterId', 'sequence']);
+          }
+          if (!db.objectStoreNames.contains('outline')) {
+            const outlineStore = db.createObjectStore('outline', { keyPath: 'id' });
+            outlineStore.createIndex('workId', 'workId');
+          }
+          if (!db.objectStoreNames.contains('characters')) {
+            const charsStore = db.createObjectStore('characters', { keyPath: 'id' });
+            charsStore.createIndex('workId', 'workId');
+          }
+          if (!db.objectStoreNames.contains('worldSettings')) {
+            const wsStore = db.createObjectStore('worldSettings', { keyPath: 'id' });
+            wsStore.createIndex('workId', 'workId');
+          }
+          if (!db.objectStoreNames.contains('bonds')) {
+            const bondsStore = db.createObjectStore('bonds', { keyPath: 'id' });
+            bondsStore.createIndex('characterId', 'characterId');
+          }
+          if (!db.objectStoreNames.contains('settings')) {
+            db.createObjectStore('settings');
+          }
+          if (!db.objectStoreNames.contains('storyBranches')) {
+            const branchStore = db.createObjectStore('storyBranches', { keyPath: 'id' });
+            branchStore.createIndex('workId', 'workId');
+          }
+        }
+      },
+    });
+  }
 
   return dbInstance;
 }
