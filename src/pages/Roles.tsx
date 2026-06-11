@@ -13,7 +13,7 @@ import { useEditorStore } from '../stores/useEditorStore';
 import type { Character, WorldSetting } from '../lib/types';
 
 const roleColors: Record<string, string> = {
-  protagonist: '#e94560',
+  protagonist: '#3b82f6',
   antagonist: '#f39c12',
   supporting: '#27ae60',
   minor: '#a0a0b0',
@@ -177,7 +177,7 @@ const Roles: React.FC = () => {
                 ) : (
                   <button
                     onClick={handleExtractCharacters}
-                    className="w-full py-1.5 text-[11px] text-ink-muted hover:text-accent-primary hover:bg-surface-hover rounded-md transition-all flex items-center justify-center gap-1"
+                    className="w-full py-1.5 text-[11px] text-ink-muted hover:text-accent-primary hover:bg-surface-hover rounded-md transition-colors duration-200 flex items-center justify-center gap-1"
                   >
                     <RobotOutlined /> AI 分析文本提取角色
                   </button>
@@ -187,7 +187,7 @@ const Roles: React.FC = () => {
               {characters.map(char => (
                 <div
                   key={char.id}
-                  className={`flex items-center gap-2 px-3 py-2 cursor-pointer transition-all hover:bg-surface-hover group ${
+                  className={`flex items-center gap-2 px-3 py-2 cursor-pointer transition-colors duration-200 hover:bg-surface-hover group ${
                     selectedCharacterId === char.id ? 'bg-accent-primary/10 border-l-2 border-accent-primary' : ''
                   }`}
                   onClick={() => {
@@ -220,7 +220,7 @@ const Roles: React.FC = () => {
               {worldSettings.map(ws => (
                 <div
                   key={ws.id}
-                  className="px-3 py-2 cursor-pointer hover:bg-surface-hover transition-all"
+                  className="px-3 py-2 cursor-pointer hover:bg-surface-hover transition-colors duration-200"
                   onClick={() => setEditingWS(ws)}
                 >
                   <div className="text-sm text-ink-body">{ws.title}</div>
@@ -247,7 +247,7 @@ const Roles: React.FC = () => {
       </div>
 
       {/* Right: Character detail editor */}
-      <div className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto p-8">
         {selectedChar ? (
           <div className="max-w-2xl animate-slide-up">
             <div className="flex items-center gap-4 mb-6">
@@ -282,7 +282,7 @@ const Roles: React.FC = () => {
                   onBlur={handleUpdate}
                   placeholder="描述角色的性格特征..."
                   rows={2}
-                  style={{ background: '#0f3460', border: '1px solid #1a4a7a', color: '#e0e0e0' }}
+                  style={{ background: '#242424', border: '1px solid #2a2a2a', color: '#e5e5e5' }}
                 />
               </div>
               <div>
@@ -293,7 +293,7 @@ const Roles: React.FC = () => {
                   onBlur={handleUpdate}
                   placeholder="如：古风、毒舌、温柔..."
                   rows={2}
-                  style={{ background: '#0f3460', border: '1px solid #1a4a7a', color: '#e0e0e0' }}
+                  style={{ background: '#242424', border: '1px solid #2a2a2a', color: '#e5e5e5' }}
                 />
               </div>
               <div>
@@ -304,7 +304,7 @@ const Roles: React.FC = () => {
                   onBlur={handleUpdate}
                   placeholder="角色的过去和经历..."
                   rows={3}
-                  style={{ background: '#0f3460', border: '1px solid #1a4a7a', color: '#e0e0e0' }}
+                  style={{ background: '#242424', border: '1px solid #2a2a2a', color: '#e5e5e5' }}
                 />
               </div>
               <div>
@@ -314,7 +314,7 @@ const Roles: React.FC = () => {
                   onChange={e => setEditingChar({ ...editingChar, appearance: e.target.value })}
                   onBlur={handleUpdate}
                   rows={2}
-                  style={{ background: '#0f3460', border: '1px solid #1a4a7a', color: '#e0e0e0' }}
+                  style={{ background: '#242424', border: '1px solid #2a2a2a', color: '#e5e5e5' }}
                 />
               </div>
               <div>
@@ -338,7 +338,7 @@ const Roles: React.FC = () => {
                         e.target.value = '';
                       }
                     }}
-                    style={{ background: '#0f3460', border: '1px solid #1a4a7a', color: '#e0e0e0' }}
+                    style={{ background: '#242424', border: '1px solid #2a2a2a', color: '#e5e5e5' }}
                   />
                 </div>
               </div>
@@ -432,7 +432,7 @@ const Roles: React.FC = () => {
             onChange={e => setEditingWS({ ...editingWS, content: e.target.value })}
             placeholder="详细设定内容..."
             rows={4}
-            style={{ background: '#0f3460', border: '1px solid #1a4a7a', color: '#e0e0e0' }}
+            style={{ background: '#242424', border: '1px solid #2a2a2a', color: '#e5e5e5' }}
           />
         </div>
       </Modal>

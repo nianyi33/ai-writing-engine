@@ -122,7 +122,7 @@ const RoleChat: React.FC = () => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-auto p-4">
+      <div className="flex-1 overflow-auto p-6">
         {messages.length === 0 && !isStreaming && (
           <div className="flex items-center justify-center h-full">
             <div className="text-center animate-slide-up">
@@ -183,7 +183,7 @@ const RoleChat: React.FC = () => {
             onPressEnter={handleSend}
             placeholder={`和 ${character.name} 说点什么...`}
             disabled={isStreaming}
-            style={{ background: '#0f3460', border: '1px solid #1a4a7a', color: '#e0e0e0' }}
+            style={{ background: '#242424', border: '1px solid #2a2a2a', color: '#e5e5e5' }}
           />
           <Button
             type="primary"

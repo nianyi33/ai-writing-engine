@@ -48,14 +48,14 @@ const Bond: React.FC = () => {
       min: -100,
       max: 100,
       axisLabel: { color: '#a0a0b0', fontSize: 10 },
-      splitLine: { lineStyle: { color: '#1a4a7a20' } },
+      splitLine: { lineStyle: { color: '#2a2a2a20' } },
     },
     series: [{
       type: 'line',
       data: bondHistory.slice().reverse().map(r => r.intimacyAfter),
       smooth: true,
-      lineStyle: { color: '#e94560', width: 2 },
-      itemStyle: { color: '#e94560' },
+      lineStyle: { color: '#3b82f6', width: 2 },
+      itemStyle: { color: '#3b82f6' },
       areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [
         { offset: 0, color: 'rgba(233,69,96,0.3)' },
         { offset: 1, color: 'rgba(233,69,96,0.02)' },
@@ -78,7 +78,7 @@ const Bond: React.FC = () => {
             return (
               <div
                 key={char.id}
-                className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-all hover:bg-surface-hover ${
+                className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors duration-200 hover:bg-surface-hover ${
                   selectedCharId === char.id ? 'bg-accent-primary/10 border-l-2 border-accent-primary' : ''
                 }`}
                 onClick={() => setSelectedCharId(char.id)}
@@ -92,8 +92,8 @@ const Bond: React.FC = () => {
                     <Progress
                       percent={absIntimacy}
                       size="small"
-                      strokeColor={isPositive ? '#e94560' : '#e74c3c'}
-                      trailColor="#1a4a7a"
+                      strokeColor={isPositive ? '#3b82f6' : '#ef4444'}
+                      trailColor="#2a2a2a"
                       showInfo={false}
                       className="flex-1"
                     />
@@ -110,7 +110,7 @@ const Bond: React.FC = () => {
       </div>
 
       {/* Right: Bond details */}
-      <div className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto p-8">
         {selectedChar ? (
           <div className="max-w-3xl animate-slide-up">
             <div className="flex items-center gap-4 mb-6">
@@ -147,7 +147,7 @@ const Bond: React.FC = () => {
               ) : (
                 <Timeline
                   items={bondHistory.map(record => ({
-                    color: record.intimacyDelta >= 0 ? '#e94560' : '#e74c3c',
+                    color: record.intimacyDelta >= 0 ? '#3b82f6' : '#ef4444',
                     children: (
                       <div className="animate-slide-right">
                         <div className="flex items-center gap-2">

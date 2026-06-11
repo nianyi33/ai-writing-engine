@@ -155,8 +155,8 @@ const Outline: React.FC = () => {
         ],
         name: '大纲评分',
         areaStyle: { color: 'rgba(233,69,96,0.3)' },
-        lineStyle: { color: '#e94560' },
-        itemStyle: { color: '#e94560' },
+        lineStyle: { color: '#3b82f6' },
+        itemStyle: { color: '#3b82f6' },
       }],
     }],
   } : null;
@@ -164,7 +164,7 @@ const Outline: React.FC = () => {
   const renderNode = (node: typeof nodes[0], depth: number) => (
     <div key={node.id} className="animate-slide-right">
       <div
-        className={`flex items-center gap-2 px-3 py-1.5 rounded-md cursor-pointer transition-all group text-sm ${
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-md cursor-pointer transition-colors duration-200 group text-sm ${
           selectedNodeId === node.id
             ? 'bg-accent-primary/20 text-accent-primary'
             : 'text-ink-body hover:bg-surface-hover'
@@ -229,7 +229,7 @@ const Outline: React.FC = () => {
               onKeyDown={e => { if (e.key === 'Escape') setAddingNodeParent(undefined); }}
               onBlur={() => { if (!newNodeTitle.trim()) setAddingNodeParent(undefined); }}
               autoFocus
-              style={{ background: '#0f3460', border: '1px solid #1a4a7a', color: '#e0e0e0' }}
+              style={{ background: '#242424', border: '1px solid #2a2a2a', color: '#e5e5e5' }}
             />
             <button
               onClick={() => setAddingNodeParent(undefined)}
@@ -320,7 +320,7 @@ const Outline: React.FC = () => {
                 onBlur={() => updateNode(selectedNode.id, { summary: editingSummary })}
                 placeholder="节点概要..."
                 rows={6}
-                style={{ background: '#0f3460', border: '1px solid #1a4a7a', color: '#e0e0e0' }}
+                style={{ background: '#242424', border: '1px solid #2a2a2a', color: '#e5e5e5' }}
               />
             </div>
           </>
@@ -368,7 +368,7 @@ const Outline: React.FC = () => {
             </div>
             <div className="h-1.5 bg-surface-card rounded-full overflow-hidden">
               <div
-                className="h-full bg-accent-primary rounded-full transition-all duration-500"
+                className="h-full bg-accent-primary rounded-full transition-[width] duration-500"
                 style={{ width: `${nodes.length > 0 ? Math.round((nodes.filter(n => n.status === 'done').length / nodes.length) * 100) : 0}%` }}
               />
             </div>
@@ -437,7 +437,7 @@ const Outline: React.FC = () => {
           onChange={e => setPremise(e.target.value)}
           placeholder="输入你的故事梗概，AI将生成完整的章节大纲..."
           rows={4}
-          style={{ background: '#0f3460', border: '1px solid #1a4a7a', color: '#e0e0e0' }}
+          style={{ background: '#242424', border: '1px solid #2a2a2a', color: '#e5e5e5' }}
         />
       </Modal>
 
@@ -456,7 +456,7 @@ const Outline: React.FC = () => {
           onChange={e => setReverseText(e.target.value)}
           placeholder="粘贴已完成的小说片段，AI将提取大纲结构..."
           rows={8}
-          style={{ background: '#0f3460', border: '1px solid #1a4a7a', color: '#e0e0e0' }}
+          style={{ background: '#242424', border: '1px solid #2a2a2a', color: '#e5e5e5' }}
         />
       </Modal>
     </div>

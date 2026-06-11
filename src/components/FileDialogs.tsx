@@ -74,7 +74,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({ open, work, onClose,
       <div className="flex flex-col gap-3 py-4">
         <button
           onClick={() => onExport('docx')}
-          className="glass-card p-4 text-left hover:border-accent-primary/50 transition-all"
+          className="glass-card p-4 text-left hover:border-accent-primary/50 transition-colors duration-200"
         >
           <ExportOutlined className="mr-2 text-accent-primary" />
           <span className="text-ink-body font-medium">导出 Word 文档 (.docx)</span>
@@ -82,7 +82,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({ open, work, onClose,
         </button>
         <button
           onClick={() => onExport('md')}
-          className="glass-card p-4 text-left hover:border-accent-primary/50 transition-all"
+          className="glass-card p-4 text-left hover:border-accent-primary/50 transition-colors duration-200"
         >
           <ExportOutlined className="mr-2 text-accent-primary" />
           <span className="text-ink-body font-medium">导出 Markdown (.md)</span>
@@ -90,7 +90,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({ open, work, onClose,
         </button>
         <button
           onClick={() => onExport('txt')}
-          className="glass-card p-4 text-left hover:border-accent-primary/50 transition-all"
+          className="glass-card p-4 text-left hover:border-accent-primary/50 transition-colors duration-200"
         >
           <ExportOutlined className="mr-2 text-accent-primary" />
           <span className="text-ink-body font-medium">导出纯文本 (.txt)</span>

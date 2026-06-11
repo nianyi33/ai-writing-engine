@@ -40,10 +40,10 @@ const Home: React.FC = () => {
     return `${d.getMonth() + 1}月${d.getDate()}日`;
   };
 
-  const typeIcons: Record<string, React.ReactNode> = {
-    novel: <BookOutlined className="text-accent-primary text-2xl" />,
-    short: <FileTextOutlined className="text-accent-warning text-2xl" />,
-    essay: <EditOutlined className="text-accent-success text-2xl" />,
+  const typeConfig: Record<string, { icon: React.ReactNode; accent: string; label: string }> = {
+    novel: { icon: <BookOutlined className="text-accent-primary text-2xl" />, accent: 'border-accent-primary', label: '长篇小说' },
+    short: { icon: <FileTextOutlined className="text-accent-warning text-2xl" />, accent: 'border-accent-warning', label: '短篇' },
+    essay: { icon: <EditOutlined className="text-accent-success text-2xl" />, accent: 'border-accent-success', label: '散文随笔' },
   };
 
   return (
@@ -85,7 +85,7 @@ const Home: React.FC = () => {
               <button onClick={() => setShowCreate(true)} className="btn-primary text-lg px-6 py-3">
                 <PlusOutlined className="mr-2" />创建作品
               </button>
-              <button onClick={() => setShowImport(true)} className="glass-card px-6 py-3 text-ink-body hover:border-accent-primary/50 transition-all">
+              <button onClick={() => setShowImport(true)} className="glass-card px-6 py-3 text-ink-body hover:border-accent-primary/50 transition-colors duration-200">
                 <ImportOutlined className="mr-2" />导入文件
               </button>
             </div>
@@ -95,13 +95,18 @@ const Home: React.FC = () => {
             {works.map((work, i) => (
               <div
                 key={work.id}
-                className="glass-card p-5 cursor-pointer group hover:border-accent-primary/40 animate-slide-up"
+                className="glass-card p-5 cursor-pointer group animate-slide-up overflow-hidden relative"
                 style={{ animationDelay: `${i * 50}ms` }}
                 onClick={() => navigate(`/work/${work.id}`)}
               >
+                {/* Type accent bar */}
+                <span
+                  className="absolute top-0 left-0 right-0 h-[3px] rounded-t-lg opacity-60"
+                  style={{ background: work.type === 'novel' ? '#3b82f6' : work.type === 'short' ? '#f59e0b' : '#22c55e' }}
+                />
                 <div className="flex items-start justify-between mb-3">
-                  <div className="w-12 h-16 bg-gradient-to-br from-surface-hover to-surface-card rounded-md flex items-center justify-center">
-                    {typeIcons[work.type]}
+                  <div className="w-12 h-16 bg-surface-hover rounded-md flex items-center justify-center">
+                    {typeConfig[work.type]?.icon}
                   </div>
                   <Dropdown
                     menu={{
@@ -151,7 +156,7 @@ const Home: React.FC = () => {
             {/* Create card */}
             <button
               onClick={() => setShowCreate(true)}
-              className="glass-card h-full min-h-[160px] flex flex-col items-center justify-center gap-2 border-dashed border-surface-hover hover:border-accent-primary/50 transition-all text-ink-muted hover:text-accent-primary"
+              className="glass-card h-full min-h-[160px] flex flex-col items-center justify-center gap-2 border-dashed border-surface-hover hover:border-accent-primary/50 transition-colors duration-200 text-ink-muted hover:text-accent-primary"
             >
               <PlusOutlined className="text-2xl" />
               <span className="text-sm">新建作品</span>

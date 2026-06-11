@@ -113,7 +113,7 @@ export const AiSidebar: React.FC<Props> = ({ visible, onToggle }) => {
                   placeholder="续写指令，如：主角推开大门..."
                   rows={2}
                   className="text-sm"
-                  style={{ background: '#0f3460', border: '1px solid #1a4a7a', color: '#e0e0e0' }}
+                  style={{ background: '#242424', border: '1px solid #2a2a2a', color: '#e5e5e5' }}
                 />
                 <div className="flex gap-2">
                   <Button

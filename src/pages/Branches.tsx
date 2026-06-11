@@ -66,9 +66,9 @@ const Branches: React.FC = () => {
       symbol: 'roundRect',
       symbolSize: [120, 40],
       roam: true,
-      label: { color: '#e0e0e0', fontSize: 12 },
-      lineStyle: { color: '#1a4a7a', width: 2 },
-      itemStyle: { color: '#e94560', borderColor: '#e94560' },
+      label: { color: '#e5e5e5', fontSize: 12 },
+      lineStyle: { color: '#2a2a2a', width: 2 },
+      itemStyle: { color: '#3b82f6', borderColor: '#3b82f6' },
     }],
   };
 
@@ -89,7 +89,7 @@ const Branches: React.FC = () => {
           {branches.map(br => (
             <div
               key={br.id}
-              className={`px-3 py-2.5 cursor-pointer transition-all hover:bg-surface-hover group ${
+              className={`px-3 py-2.5 cursor-pointer transition-colors duration-200 hover:bg-surface-hover group ${
                 selectedBranch?.id === br.id ? 'bg-accent-primary/10 border-l-2 border-accent-primary' : ''
               }`}
               onClick={() => setSelectedBranch(br)}
@@ -124,7 +124,7 @@ const Branches: React.FC = () => {
       </div>
 
       {/* Right: Branch details */}
-      <div className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto p-8">
         {selectedBranch ? (
           <div className="animate-slide-up">
             <h2 className="text-xl font-bold text-ink-title mb-1">{selectedBranch.name}</h2>
@@ -208,7 +208,7 @@ const Branches: React.FC = () => {
             onChange={e => setNewBranch({ ...newBranch, description: e.target.value })}
             placeholder="描述这个分支的走向..."
             rows={2}
-            style={{ background: '#0f3460', border: '1px solid #1a4a7a', color: '#e0e0e0' }}
+            style={{ background: '#242424', border: '1px solid #2a2a2a', color: '#e5e5e5' }}
           />
         </div>
       </Modal>

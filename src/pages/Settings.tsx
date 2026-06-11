@@ -31,8 +31,8 @@ const Settings: React.FC = () => {
   const getProviderName = (id: string) => PROVIDERS.find(p => p.id === id)?.name || id;
 
   return (
-    <div className="flex-1 overflow-auto p-6 animate-fade-in">
-      <div className="max-w-xl mx-auto">
+    <div className="flex-1 overflow-auto p-8 md:p-12 animate-fade-in">
+      <div className="max-w-2xl mx-auto">
         <button onClick={() => navigate(-1)} className="btn-ghost mb-4">
           <ArrowLeftOutlined className="mr-1" />返回
         </button>
@@ -144,7 +144,7 @@ const Settings: React.FC = () => {
                 const isActive = activeModelInfo?.provider === k.provider;
                 return (
                   <div key={k.provider}
-                    className={`flex items-center justify-between rounded-lg px-3 py-2.5 transition-all ${
+                    className={`flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors duration-200 ${
                       isActive ? 'bg-accent-primary/10 border border-accent-primary/30' : 'bg-surface-main'
                     }`}
                   >

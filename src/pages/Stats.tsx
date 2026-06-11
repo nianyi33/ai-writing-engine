@@ -35,7 +35,7 @@ const Stats: React.FC = () => {
       type: 'value',
       name: '字数',
       axisLabel: { color: '#a0a0b0', fontSize: 10 },
-      splitLine: { lineStyle: { color: '#1a4a7a20' } },
+      splitLine: { lineStyle: { color: '#2a2a2a20' } },
     },
     series: [{
       type: 'bar',
@@ -43,8 +43,8 @@ const Stats: React.FC = () => {
       itemStyle: {
         color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
           colorStops: [
-            { offset: 0, color: '#e94560' },
-            { offset: 1, color: '#e9456040' },
+            { offset: 0, color: '#3b82f6' },
+            { offset: 1, color: '#3b82f640' },
           ]},
         borderRadius: [4, 4, 0, 0],
       },
@@ -71,7 +71,7 @@ const Stats: React.FC = () => {
       orient: 'horizontal',
       left: 'center',
       bottom: 0,
-      inRange: { color: ['#1a1a2e', '#16213e', '#0f3460', '#1a4a7a', '#e94560'] },
+      inRange: { color: ['#0d0d0d', '#1a1a1a', '#242424', '#2a2a2a', '#3b82f6'] },
       show: false,
     },
     series: [{
@@ -83,7 +83,7 @@ const Stats: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 overflow-auto p-6 animate-fade-in">
+    <div className="flex-1 overflow-auto p-8 md:p-12 animate-fade-in">
       <div className="max-w-4xl mx-auto">
         <h2 className="text-xl font-bold text-ink-title mb-6">写作统计</h2>
 
@@ -94,7 +94,7 @@ const Stats: React.FC = () => {
               title={<span className="text-ink-muted text-xs">总字数</span>}
               value={work?.wordCount || 0}
               suffix="字"
-              valueStyle={{ color: '#e0e0e0', fontSize: 24, fontWeight: 'bold' }}
+              valueStyle={{ color: '#e5e5e5', fontSize: 24, fontWeight: 'bold' }}
               prefix={<EditOutlined className="text-accent-primary mr-1" />}
             />
           </div>
@@ -103,7 +103,7 @@ const Stats: React.FC = () => {
               title={<span className="text-ink-muted text-xs">今日字数</span>}
               value={todayWords}
               suffix="字"
-              valueStyle={{ color: '#e0e0e0', fontSize: 24, fontWeight: 'bold' }}
+              valueStyle={{ color: '#e5e5e5', fontSize: 24, fontWeight: 'bold' }}
               prefix={<ClockCircleOutlined className="text-accent-primary mr-1" />}
             />
           </div>
@@ -112,7 +112,7 @@ const Stats: React.FC = () => {
               title={<span className="text-ink-muted text-xs">连续天数</span>}
               value={streakDays}
               suffix="天"
-              valueStyle={{ color: '#e0e0e0', fontSize: 24, fontWeight: 'bold' }}
+              valueStyle={{ color: '#e5e5e5', fontSize: 24, fontWeight: 'bold' }}
               prefix={<FireOutlined className="text-accent-warning mr-1" />}
             />
           </div>
@@ -121,7 +121,7 @@ const Stats: React.FC = () => {
               title={<span className="text-ink-muted text-xs">本次会话</span>}
               value={sessionWords}
               suffix="字"
-              valueStyle={{ color: '#e0e0e0', fontSize: 24, fontWeight: 'bold' }}
+              valueStyle={{ color: '#e5e5e5', fontSize: 24, fontWeight: 'bold' }}
               prefix={<TrophyOutlined className="text-accent-success mr-1" />}
             />
           </div>

@@ -358,6 +358,14 @@ for item in eval_items:
 # ══════════════════════════════════════════════════════════
 # 保存
 # ══════════════════════════════════════════════════════════
-output_path = os.path.expanduser("~/Desktop/个人简历-AI全栈开发工程师-优化版.docx")
-doc.save(output_path)
+desktop = os.path.join(os.environ['USERPROFILE'], 'Desktop')
+output_path = os.path.join(desktop, '个人简历-AI全栈开发工程师-优化版.docx')
+try:
+    doc.save(output_path)
+except PermissionError:
+    # File locked by WPS — save with a new name
+    import time
+    output_path = os.path.join(desktop, f'个人简历-AI全栈开发工程师-优化版-{int(time.time())}.docx')
+    doc.save(output_path)
+print(f'已保存至: {output_path}')
 print(f"✅ 简历已保存至: {output_path}")

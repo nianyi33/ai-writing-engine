@@ -6,28 +6,32 @@ export default {
     extend: {
       colors: {
         surface: {
-          main: '#1a1a2e',
-          secondary: '#16213e',
-          card: '#0f3460',
-          hover: '#1a4a7a',
+          main: 'rgb(var(--surface-main) / <alpha-value>)',
+          secondary: 'rgb(var(--surface-secondary) / <alpha-value>)',
+          card: 'rgb(var(--surface-card) / <alpha-value>)',
+          hover: 'rgb(var(--surface-hover) / <alpha-value>)',
         },
         accent: {
-          primary: '#e94560',
-          success: '#27ae60',
-          warning: '#f39c12',
-          error: '#e74c3c',
+          primary: 'rgb(var(--accent-primary) / <alpha-value>)',
+          success: 'rgb(var(--accent-success) / <alpha-value>)',
+          warning: 'rgb(var(--accent-warning) / <alpha-value>)',
+          error: 'rgb(var(--accent-error) / <alpha-value>)',
         },
         ink: {
-          body: '#e0e0e0',
-          title: '#ffffff',
-          muted: '#a0a0b0',
-          disabled: '#606070',
+          body: 'rgb(var(--ink-body) / <alpha-value>)',
+          title: 'rgb(var(--ink-title) / <alpha-value>)',
+          muted: 'rgb(var(--ink-muted) / <alpha-value>)',
+          disabled: 'rgb(var(--ink-disabled) / <alpha-value>)',
         },
       },
       fontFamily: {
         editor: ['"Source Han Serif SC"', '"Noto Serif CJK SC"', 'Georgia', 'serif'],
-        ui: ['"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+        ui: ['"Geist"', '"Geist Fallback"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
         code: ['"Cascadia Code"', '"Fira Code"', 'Consolas', 'monospace'],
+      },
+      fontWeight: {
+        medium: '500',
+        semibold: '600',
       },
       fontSize: {
         editor: ['16px', { lineHeight: '1.8' }],

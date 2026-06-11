@@ -125,7 +125,7 @@ const Editor: React.FC = () => {
                 onPressEnter={handleCreateChapter}
                 onBlur={() => { if (!newChapterTitle.trim()) setAddingChapter(false); }}
                 autoFocus
-                style={{ background: '#0f3460', border: '1px solid #1a4a7a', color: '#e0e0e0' }}
+                style={{ background: '#242424', border: '1px solid #2a2a2a', color: '#e5e5e5' }}
               />
             </div>
           )}
@@ -133,7 +133,7 @@ const Editor: React.FC = () => {
           {chapters.map((ch) => (
             <div
               key={ch.id}
-              className={`group flex items-center justify-between px-2 py-1.5 rounded-md cursor-pointer text-sm transition-all mb-0.5 ${
+              className={`group flex items-center justify-between px-2 py-1.5 rounded-md cursor-pointer text-sm transition-colors duration-200 mb-0.5 ${
                 currentChapter?.id === ch.id
                   ? 'bg-accent-primary/20 text-accent-primary'
                   : 'text-ink-body hover:bg-surface-hover'

@@ -85,7 +85,7 @@ function showUpdateToast() {
         bottom: 24px;
         right: 24px;
         z-index: 99999;
-        background: #e94560;
+        background: #3b82f6;
         color: #fff;
         padding: 12px 20px;
         border-radius: 8px;

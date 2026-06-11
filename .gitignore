@@ -8,3 +8,6 @@ dist/
 Thumbs.db
 src-tauri/target/
 src-tauri/gen/
+.claude/skills/
+release/
+*.zip
