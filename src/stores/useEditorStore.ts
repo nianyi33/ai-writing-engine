@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { v4 as uuid } from 'uuid';
 import type { Chapter } from '../lib/types';
-import { getChaptersByWork, getChapter, saveChapter, deleteChapter as deleteCh, updateWorkField } from '../lib/storage';
+import { getChaptersByWork, getChapter, saveChapter, saveChapters, deleteChapter as deleteCh, updateWorkField } from '../lib/storage';
 import { createVersion } from '../lib/version-manager';
 import { countChineseWords } from '../lib/file-importer';
 import { useWorksStore } from './useWorksStore';
@@ -206,9 +206,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     chapters.splice(toIndex, 0, moved);
     const reordered = chapters.map((c, i) => ({ ...c, order: i + 1 }));
     set({ chapters: reordered });
-    for (const ch of reordered) {
-      await saveChapter(ch);
-    }
+    await saveChapters(reordered);
   },
 
   triggerAutoSave: async () => {

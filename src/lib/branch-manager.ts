@@ -11,14 +11,14 @@ export async function getBranch(workId: string, branchId: string): Promise<Story
   return branches.find(b => b.id === branchId);
 }
 
-export function createBranch(
+export async function createBranch(
   workId: string,
   name: string,
   description: string,
   forkChapterId: string,
   forkPosition: number,
   parentBranchId: string | null = null,
-): StoryBranch {
+): Promise<StoryBranch> {
   const branch: StoryBranch = {
     id: uuid(),
     workId,
@@ -31,8 +31,7 @@ export function createBranch(
     createdAt: Date.now(),
     updatedAt: Date.now(),
   };
-  // Fire-and-forget save (return branch synchronously for UI)
-  saveBranch(branch).catch(e => console.error('保存分支失败:', e));
+  await saveBranch(branch);
   return branch;
 }
 

@@ -133,6 +133,8 @@ export const useAiStore = create<AiState>((set, get) => ({
 
     const userMsg: AiMessage = { role: 'user', content, tokens: content.length, timestamp: Date.now() };
     conv.messages.push(userMsg);
+    conv.updatedAt = Date.now();
+    set({ conversations: new Map(get().conversations) });
 
     try {
       const config = getApiConfig();
@@ -143,6 +145,7 @@ export const useAiStore = create<AiState>((set, get) => ({
 
       get().stopStreaming();
       const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 120_000);
       set({ isStreaming: true, _abortController: controller });
 
       const response = await fetch(apiUrl('/api/ai/continue'), {
@@ -163,16 +166,18 @@ export const useAiStore = create<AiState>((set, get) => ({
         set({ streamingContent: sc });
       });
 
+      clearTimeout(timeoutId);
+
       const assistantMsg: AiMessage = { role: 'assistant', content: fullContent, tokens: fullContent.length, timestamp: Date.now() };
       conv.messages.push(assistantMsg);
       conv.updatedAt = Date.now();
-      set({ isStreaming: false, streamingContent: '' });
+      set({ conversations: new Map(get().conversations), isStreaming: false, streamingContent: '' });
       return fullContent;
     } catch (e: any) {
       if (e.name !== 'AbortError') {
-        set({ isStreaming: false, error: e.message });
+        set({ conversations: new Map(get().conversations), isStreaming: false, error: e.message });
       } else {
-        set({ isStreaming: false });
+        set({ conversations: new Map(get().conversations), isStreaming: false, streamingContent: '' });
       }
       return '';
     }
@@ -183,11 +188,13 @@ export const useAiStore = create<AiState>((set, get) => ({
     get().stopStreaming();
 
     const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 120_000);
     set({ isStreaming: true, streamingContent: '', error: null, _abortController: controller });
 
     try {
       const config = getApiConfig();
       if (!config.apiKey) {
+        clearTimeout(timeoutId);
         set({ error: '请先在设置中配置 API Key', isStreaming: false });
         return;
       }
@@ -210,6 +217,7 @@ export const useAiStore = create<AiState>((set, get) => ({
         set({ streamingContent: fullContent });
       });
 
+      clearTimeout(timeoutId);
       set({ isStreaming: false });
     } catch (e: any) {
       if (e.name === 'AbortError') {
@@ -224,11 +232,13 @@ export const useAiStore = create<AiState>((set, get) => ({
     get().stopStreaming();
 
     const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 120_000);
     set({ isStreaming: true, streamingContent: '', error: null, _abortController: controller });
 
     try {
       const config = getApiConfig();
       if (!config.apiKey) {
+        clearTimeout(timeoutId);
         set({ error: '请先在设置中配置 API Key', isStreaming: false });
         return;
       }
@@ -249,6 +259,7 @@ export const useAiStore = create<AiState>((set, get) => ({
         set({ streamingContent: fullContent });
       });
 
+      clearTimeout(timeoutId);
       set({ isStreaming: false });
     } catch (e: any) {
       if (e.name === 'AbortError') {

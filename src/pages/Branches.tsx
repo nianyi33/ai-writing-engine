@@ -32,7 +32,7 @@ const Branches: React.FC = () => {
 
   const handleCreate = async () => {
     if (!workId || !newBranch.name.trim()) return;
-    createBranch(workId, newBranch.name.trim(), newBranch.description, newBranch.forkChapterId || 'root', newBranch.forkPosition);
+    await createBranch(workId, newBranch.name.trim(), newBranch.description, newBranch.forkChapterId || 'root', newBranch.forkPosition);
     await reload();
     setShowCreate(false);
     setNewBranch({ name: '', description: '', forkChapterId: '', forkPosition: 0 });

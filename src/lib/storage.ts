@@ -172,38 +172,29 @@ export async function deleteWork(id: string): Promise<void> {
   const storeNames = ['chapters', 'versions', 'outline', 'characters', 'bonds', 'worldSettings', 'storyBranches', 'works'];
   const tx = db.transaction(storeNames, 'readwrite');
 
-  const chapters = await tx.objectStore('chapters').getAll();
+  // Use workId index instead of scanning all rows
+  const chapters = await tx.objectStore('chapters').index('workId').getAll(id);
   for (const ch of chapters) {
-    if (ch.workId !== id) continue;
     tx.objectStore('chapters').delete(ch.id);
-    const allVersions = await tx.objectStore('versions').getAll();
-    for (const v of allVersions) {
-      if (v.chapterId === ch.id) tx.objectStore('versions').delete(v.id);
-    }
+    const versions = await tx.objectStore('versions').index('chapterId').getAll(ch.id);
+    for (const v of versions) tx.objectStore('versions').delete(v.id);
   }
 
-  const allOutline = await tx.objectStore('outline').getAll();
-  for (const n of allOutline) {
-    if (n.workId === id) tx.objectStore('outline').delete(n.id);
+  const outlineNodes = await tx.objectStore('outline').index('workId').getAll(id);
+  for (const n of outlineNodes) tx.objectStore('outline').delete(n.id);
+
+  const chars = await tx.objectStore('characters').index('workId').getAll(id);
+  for (const c of chars) {
+    tx.objectStore('characters').delete(c.id);
+    const bonds = await tx.objectStore('bonds').index('characterId').getAll(c.id);
+    for (const b of bonds) tx.objectStore('bonds').delete(b.id);
   }
 
-  const allChars = await tx.objectStore('characters').getAll();
-  for (const c of allChars) {
-    if (c.workId === id) {
-      tx.objectStore('characters').delete(c.id);
-      const allBonds = await tx.objectStore('bonds').getAll();
-      for (const b of allBonds) {
-        if (b.characterId === c.id) tx.objectStore('bonds').delete(b.id);
-      }
-    }
-  }
+  const worldNodes = await tx.objectStore('worldSettings').index('workId').getAll(id);
+  for (const w of worldNodes) tx.objectStore('worldSettings').delete(w.id);
 
-  for (const w of await tx.objectStore('worldSettings').getAll()) {
-    if (w.workId === id) tx.objectStore('worldSettings').delete(w.id);
-  }
-  for (const b of await tx.objectStore('storyBranches').getAll()) {
-    if (b.workId === id) tx.objectStore('storyBranches').delete(b.id);
-  }
+  const branches = await tx.objectStore('storyBranches').index('workId').getAll(id);
+  for (const b of branches) tx.objectStore('storyBranches').delete(b.id);
 
   tx.objectStore('works').delete(id);
   await tx.done;
@@ -224,6 +215,16 @@ export async function getChapter(id: string): Promise<Chapter | undefined> {
 export async function saveChapter(chapter: Chapter): Promise<void> {
   const db = await getDB();
   await db.put('chapters', { ...chapter, updatedAt: Date.now() });
+}
+
+/** Batch-save chapters in a single transaction — atomic: all succeed or all roll back */
+export async function saveChapters(chapters: Chapter[]): Promise<void> {
+  const db = await getDB();
+  const tx = db.transaction('chapters', 'readwrite');
+  for (const ch of chapters) {
+    tx.store.put({ ...ch, updatedAt: Date.now() });
+  }
+  await tx.done;
 }
 
 export async function deleteChapter(id: string): Promise<void> {
